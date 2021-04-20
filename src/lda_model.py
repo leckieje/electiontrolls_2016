@@ -70,10 +70,10 @@ class LDA_model():
         axs[1].set_xlabel('Topic')
         
         fig.tight_layout()
-        fig.legend();
+        fig.legend(); 
     
     def plot_top_words(self, feature_names, n_top_words=10):
-        fig, axes = plt.subplots(2, 5, figsize=(30, 15), sharex=True)
+        fig, axes = plt.subplots(2, 3, figsize=(30, 15), sharex=True)
         axes = axes.flatten()
         
         for topic_idx, topic in enumerate(self.phi_mat):
@@ -84,7 +84,7 @@ class LDA_model():
             ax = axes[topic_idx]
             ax.barh(top_features, weights, height=0.7)
             ax.set_title(f'Topic {topic_idx +1}',
-                         fontdict={'fontsize': 30})
+                         fontdict={'fontsize': 15})
             ax.invert_yaxis()
             ax.tick_params(axis='both', which='major', labelsize=20)
             for i in 'top right left'.split():
