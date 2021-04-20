@@ -11,7 +11,7 @@ class EDA_vec():
 
     def __init__(self, X, y):
         self.X = X
-        self.y = y
+        self.y = y.values
         self.legit_count = sum(y)
         self.troll_count = len(y) - sum(y)
         self.troll_dist = (len(y) - sum(y)) / len(y)
@@ -82,11 +82,37 @@ class EDA_vec():
         fig.tight_layout();
     
     # top words/ class
-    def top_word_freq(self):
+    def word_freq_df(self):
         df = pd.concat([self.troll_freq, self.legit_freq,], axis=1)
         df['diff'] = np.abs(df[0] - df[1])
         df.sort_values(by='diff', ascending=False, inplace=True)
+        
         return df
+    
+    def top_words(self, low=0, high=5):
+        legit_words = self.legit_freq.index[low+1:high+1]
+        troll_words = self.troll_freq.index[low+1:high+1]
+        
+        return troll_words, legit_words
+    
+    def chart_top_words(self, low=0, high=6):
+        fig, ax = plt.subplots(2)
+        legit_words = self.legit_freq.index[low+1:high+1]
+        troll_words = self.troll_freq.index[low+1:high+1]
+        
+        x = np.arange(len(troll_words))
+        ax[0].bar(x, self.legit_freq[legit_words])
+        ax[1].bar(x, self.troll_freq[troll_words])
+        
+        ax[0].set_title('Top Words: Legit')
+        ax[0].set_ylabel('Frequency')
+        ax[0].set_xticklabels(legit_words)
+        
+        ax[1].set_title('Top Words: Trolls')
+        ax[1].set_ylabel('Frequency')
+        ax[1].set_xticklabels(troll_words)
+        
+        fig.tight_layout()
 
     # vectorizer to dataframe
     def _get_dataframe(self):
