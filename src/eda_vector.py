@@ -1,0 +1,94 @@
+import pandas as pd 
+import numpy as np
+import matplotlib.pyplot as plt
+from nltk.corpus import stopwords, words
+
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+from sklearn.model_selection import train_test_split
+
+
+class EDA_vec():
+
+    def __init__(self, X, y):
+        self.X = X
+        self.y = y
+        self.legit_count = sum(y)
+        self.troll_count = len(y) - sum(y)
+        self.troll_dist = (len(y) - sum(y)) / len(y)
+        self.legit_dist = sum(y) / len(y)
+        self.legit_freq = None
+        self.troll_freq = None
+        self.freq_diff = None
+        self.stop_words = stopwords.words('english')
+        self.features = None 
+        self.vec_data = None
+        self.vec_shape = None
+
+    def add_stop_words(self, custom_stops):
+        sw = self.stop_words + custom_stops
+        self.stop_words = sw
+
+    def vectorize(self, vec_type='count', min_df=.01, max_df=1.0, n_grams=(1,2), max_features=None):
+        if vec_type == 'count':
+            vectorizer = CountVectorizer(stop_words=self.stop_words, min_df=min_df, ngram_range=n_grams)
+        elif vec_type == 'tfidf':
+            vectorizer = TfidfVectorizer(max_features=max_features, min_df=min_df, max_df=max_df, stop_words=self.stop_words, ngram_range=n_grams)
+        else:
+            print('Please specify a vector type')
+
+        self.vec_data = vectorizer.fit_transform(self.X)
+        self.features = vectorizer.get_feature_names()
+        self.vec_shape = self.vec_data.shape
+    
+        return self.features, self.vec_data.toarray()
+
+    # diff in word frequenncy
+    def word_freq(self):
+        df = pd.DataFrame(data=self.vec_data.toarray(), columns=self.features)
+        df['legit'] = self.y
+        legit = df[df['legit'] == 1]
+        troll = df[df['legit'] == 0]
+        legit_fr = legit.sum().apply(lambda x: x/len(legit))
+        troll_fr = troll.sum().apply(lambda x: x/len(troll))
+        self.legit_freq = legit_fr.sort_values(ascending=False)
+        self.troll_freq = troll_fr.sort_values(ascending=False)
+
+    def chart_word_freq(self, word_lst=None, low_words=0, high_words=5):
+        fig, ax = plt.subplots()
+        
+        df = pd.concat([self.troll_freq, self.legit_freq,], axis=1)
+        df['diff'] = np.abs(df[0] - df[1])
+        df.sort_values(by='diff', ascending=False, inplace=True)
+        self.freq_diff = df
+        
+        if not word_lst:
+            word_lst = df.index[low_words+1:high_words+1]
+        
+        labels = word_lst # adjust words here
+        legi = df.loc[word_lst, 1]
+        trol = df.loc[word_lst, 0]
+        
+        x = np.arange(len(labels))
+        width = 0.35
+        legit_bar = ax.bar(x-width/2, legi, width, label='Legit')
+        troll_bar = ax.bar(x+width/2, trol, width, label='Troll')
+        
+        ax.set_ylabel('Frequency')
+        ax.set_title('Word Use Frequency')
+        ax.set_xticks(x)
+        ax.set_xticklabels(labels)
+        ax.legend()
+
+        fig.tight_layout();
+    
+    # top words/ class
+    def top_word_freq(self):
+        df = pd.concat([self.troll_freq, self.legit_freq,], axis=1)
+        df['diff'] = np.abs(df[0] - df[1])
+        df.sort_values(by='diff', ascending=False, inplace=True)
+        return df
+
+    # vectorizer to dataframe
+    def _get_dataframe(self):
+        return pd.DataFrame(data=self.vec_data.toarray(), columns=self.features)
+        

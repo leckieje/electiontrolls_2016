@@ -42,7 +42,7 @@ def get_random_sample(df, num_samples):
     return df_samp
 
 # load and split data
-def get_data(num_samples=700000):
+def get_data(num_samples=700000, balanced=True):
     # load data
     legit = pd.read_csv('data/legit_tweets.csv', parse_dates = ['date'])
     troll = pd.read_csv('data/troll_tweets.csv', parse_dates = ['date'])
@@ -52,8 +52,12 @@ def get_data(num_samples=700000):
     troll_summer = troll[(troll['date'] >= '2016-06-28') & (troll['date'] <= '2016-11-02')]
 
     # get samples
-    troll_samp = get_random_sample(troll_summer, num_samples)
-    legit_samp = get_random_sample(legit, num_samples)
+    if balanced:
+        troll_samp = get_random_sample(troll_summer, int(num_samples/2))
+        legit_samp = get_random_sample(legit, int(num_samples/2))
+    else:
+        troll_samp = get_random_sample(troll_summer, int(0.08 * num_samples))
+        legit_samp = get_random_sample(legit, int((1 - 0.08) * num_samples))
 
     # combine legit and troll tweets
     total_tweets = pd.concat([legit_samp.loc[:,['text','legit']], troll_samp.loc[:,['text','legit']]])
