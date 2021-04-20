@@ -7,21 +7,20 @@ from sklearn.model_selection import train_test_split
 from sklearn.decomposition import LatentDirichletAllocation
 from tmtoolkit.topicmod.evaluate import metric_coherence_gensim
 
-def LDA_model():
+class LDA_model():
 
-    def __init__(self, n_components=5, max_iter=5):
-        self.lda = LatentDirichletAllocation(n_components=n_components, n_jobs=-1, 
-                                                learning_method='online', max_iter=5)
+    def __init__(self):
+        self.lda = LatentDirichletAllocation(n_components=5, n_jobs=-1, learning_method='online', max_iter=5)
         self.X = None
         self.y = None
-        self.fit = None
+        self.fit_model = None
         self.theta = None
         self.phi = None
 
     def fit(self, X, y):
         self.X = X
         self.y = y
-        self.fit = self.lda.fit(self.X)
+        self.fit_model = self.lda.fit(X)
 
     def phi(self):
         self.phi = self.lda.components_
@@ -45,12 +44,16 @@ def LDA_model():
         return self.topic_likelihood
 
     def topics_by_class(self):
-        return pd.DataFrame({'topic': self.topic_likelihood, 'legit': self.y.values}) 
+        return pd.DataFrame({'topic': self.topic_likelihood, 'legit': self.y.values})
+
 
 if __name__ == '__main__':
-    # X, y = resample_training_data('data/data.json')
+    X_train, X_test, y_train, y_test = get_data(num_samples=700000)
+    custom_stops = ['https', 'rt']
+    stop_words = get_stopwords(custom_stops)
+    vocab_count, count_vec = get_countvec(X_train, stop_words=stop_words, min_df=0.005, n_grams=(1,2))
     model = LDA_model()
-    model.fit(X, y)
+    model.fit(count_vec, y_train)
     with open('model.pkl', 'wb') as f:
         # Write the model to a file.
         pickle.dump(model, f)
