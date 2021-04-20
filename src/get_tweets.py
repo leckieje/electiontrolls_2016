@@ -16,7 +16,9 @@ auth = tweepy.OAuthHandler(consumer_key, consumer_key_secret)
 auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth)
 
-# this functioin will pull and parse tweets but is prohibitively slow 
+# this functioin will pull and parse tweets but is prohibitively slow for any thing > 10's of 1,000s
+# for most data, use the Hydrator app from Documenting the Now
+# Documenting the Now. (2020). Hydrator [Computer Software]. Retrieved from https://github.com/docnow/hydrator
 def get_tweets(ids, df=True):
     
     tweet_d = {
