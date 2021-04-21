@@ -28,7 +28,7 @@ class EDA_vec():
         sw = self.stop_words + custom_stops
         self.stop_words = sw
 
-    def vectorize(self, vec_type='count', min_df=.01, max_df=1.0, n_grams=(1,2), max_features=None):
+    def vectorize(self, vec_type='count', min_df=.000001, max_df=1.0, n_grams=(1,2), max_features=None):
         if vec_type == 'count':
             vectorizer = CountVectorizer(stop_words=self.stop_words, min_df=min_df, ngram_range=n_grams)
         elif vec_type == 'tfidf':

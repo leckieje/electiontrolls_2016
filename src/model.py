@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from nltk.corpus import stopwords, words
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.model_selection import train_test_split
+from imblearn.over_sampling import SMOTE 
 
 # generate stop words
 custom_stops = ['https', 'rt', 'co', 'amp', 'via', 'go', 'get', 'said', 'say', 'news', 'new', 'make', 'want', 
@@ -27,10 +28,10 @@ def get_data(num_samples=50000, balanced=True, split=True):
     troll_summer = troll[(troll['date'] >= '2016-06-28') & (troll['date'] <= '2016-11-02')]
 
     # get samples
-    if balanced:
-        troll_samp = get_random_sample(troll_summer, int(num_samples/2))
-        legit_samp = get_random_sample(legit, int(num_samples/2))
-    elif num_samples > 0:
+    # if balanced:
+    #     troll_samp = get_random_sample(troll_summer, int(num_samples/2))
+    #     legit_samp = get_random_sample(legit, int(num_samples/2))
+    if num_samples > 0:
         troll_samp = get_random_sample(troll_summer, int(0.08 * num_samples))
         legit_samp = get_random_sample(legit, int((1 - 0.08) * num_samples))
     else:
@@ -41,14 +42,27 @@ def get_data(num_samples=50000, balanced=True, split=True):
     total_tweets = pd.concat([legit_samp.loc[:,['text','legit']], troll_samp.loc[:,['text','legit']]])
     total_tweets.reset_index(drop=True, inplace=True)
 
-    # set X and y, split
+    # set X and y
     X = total_tweets['text']
     y = total_tweets['legit']
 
-    if split:
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, stratify=y)
+    # oversample for balanced classes andd train/test split
+    if balanced:
+        sm = SMOTE(k_neighbors=5, n_jobs=-1)
+        X_res, y_res = sm.fit_resample(X,y)
+    
+        if split:
+            X_train, X_test, y_train, y_test = train_test_split(X_res, y_res, test_size=0.25, stratify=y)
+            
+            return X_train, X_test, y_train, y_test
         
-        return X_train, X_test, y_train, y_test
+        else:
+            return X_res, y_res
     
     else:
+        if split:
+            X_train, X_test, y_train, y_test = train_test_split(X_res, y_res, test_size=0.25, stratify=y)
+
+            return X_train, X_test, y_train, y_test
+
         return X, y
