@@ -54,7 +54,7 @@ class EDA_vec():
         self.troll_freq = troll_fr.sort_values(ascending=False)
 
     def chart_word_freq(self, word_lst=None, low_words=0, high_words=5):
-        fig, ax = plt.subplots()
+        fig, ax = plt.subplots(figsize=(8,10))
         
         df = pd.concat([self.troll_freq, self.legit_freq,], axis=1)
         df['diff'] = np.abs(df[0] - df[1])
@@ -70,8 +70,8 @@ class EDA_vec():
         
         x = np.arange(len(labels))
         width = 0.35
-        legit_bar = ax.bar(x-width/2, legi, width, label='Legit')
-        troll_bar = ax.bar(x+width/2, trol, width, label='Troll')
+        legit_bar = ax.bar(x-width/2, legi, width, color='blue', label='Legit')
+        troll_bar = ax.bar(x+width/2, trol, width, color='orange', label='Troll')
         
         ax.set_ylabel('Frequency')
         ax.set_title('Word Use Frequency')

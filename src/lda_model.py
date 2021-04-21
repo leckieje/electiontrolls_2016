@@ -82,13 +82,13 @@ class LDA_model():
         fig.tight_layout()
         fig.legend(); 
     
-    def plot_top_words(self, n_top_words=10):
+    def plot_top_words(self, feature_names, n_top_words=10):
         fig, axes = plt.subplots(2, 3, figsize=(30, 15), sharex=True)
         axes = axes.flatten()
         
         for topic_idx, topic in enumerate(self.phi_mat):
             top_features_ind = topic.argsort()[:-n_top_words - 1:-1]
-            top_features = [self.vocab[i] for i in top_features_ind]
+            top_features = [feature_names[i] for i in top_features_ind]
             weights = topic[top_features_ind]
 
             ax = axes[topic_idx]
