@@ -40,6 +40,11 @@ class LDA_model():
         self.theta_mat = theta_mat
         return theta_mat
 
+    def test_theta(self, X_test):
+        theta_test = self.lda.transform(X_test)
+        self.theta_test = theta_test
+        return theta_test
+
     def coherance_score(self, top_n=25):
         score_ = metric_coherence_gensim(measure='u_mass', top_n=top_n, 
                                         topic_word_distrib=self.phi_mat, 
