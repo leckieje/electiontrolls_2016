@@ -23,6 +23,7 @@ class LDA_model():
         self.phi_mat = None
         self.topic_hood = None
         self.score = None
+        self.theta_test = None 
 
     def fit(self, X, y, vocab):
         self.X = X
