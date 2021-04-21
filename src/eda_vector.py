@@ -54,7 +54,7 @@ class EDA_vec():
         self.troll_freq = troll_fr.sort_values(ascending=False)
 
     def chart_word_freq(self, word_lst=None, low_words=0, high_words=5):
-        fig, ax = plt.subplots(figsize=(8,10))
+        fig, ax = plt.subplots()
         
         df = pd.concat([self.troll_freq, self.legit_freq,], axis=1)
         df['diff'] = np.abs(df[0] - df[1])
