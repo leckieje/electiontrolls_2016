@@ -21,8 +21,9 @@ class EDA_vec():
         self.freq_diff = None
         self.stop_words = stopwords.words('english')
         self.vocab = None 
-        self.vec_data = None
+        self.vec_fit = None
         self.vec_shape = None
+        self.vec_data
 
     def add_stop_words(self, custom_stops):
         sw = self.stop_words + custom_stops
@@ -36,11 +37,14 @@ class EDA_vec():
         else:
             print('Please specify a vector type')
 
-        self.vec_data = vectorizer.fit_transform(self.X)
+        self.vec_fit = vectorizer.fit(self.X)
         self.vocab = vectorizer.get_feature_names()
-        self.vec_shape = self.vec_data.shape
+        self.vec_shape = self.vec_fit.shape
     
-        return self.vocab, self.vec_data.toarray()
+        return self.vocab, self.vec_fit
+
+    # def transform(self, X)    
+    #         self.trans = self.vec_fit
 
     # diff in word frequenncy
     def word_freq(self):
