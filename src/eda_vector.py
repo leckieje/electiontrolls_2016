@@ -23,7 +23,7 @@ class EDA_vec():
         self.vocab = None 
         self.vec_fit = None
         self.vec_shape = None
-        self.vec_data
+        self.vec_data = None
 
     def add_stop_words(self, custom_stops):
         sw = self.stop_words + custom_stops
