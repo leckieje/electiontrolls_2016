@@ -6,6 +6,8 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.decomposition import LatentDirichletAllocation
 from tmtoolkit.topicmod.evaluate import metric_coherence_gensim
+from src.model import * 
+from src.eda_vector import *
 import pickle
 
 class LDA_model():
@@ -15,14 +17,17 @@ class LDA_model():
                                              learning_method='online', max_iter=max_iter)
         self.X = None
         self.y = None
+        self.vocab = None
         self.fit_model = None
         self.theta_mat = None
         self.phi_mat = None
         self.topic_hood = None
+        self.score = None
 
-    def fit(self, X, y):
+    def fit(self, X, y, vocab):
         self.X = X
         self.y = y
+        self.vocab = vocab
         self.fit_model = self.lda.fit(X)
 
     def phi(self):
@@ -35,13 +40,18 @@ class LDA_model():
         self.theta_mat = theta_mat
         return theta_mat
 
-    def coherance_score(self):
-        pass
+    def coherance_score(self, top_n=25):
+        score = metric_coherence_gensim(measure='u_mass', top_n=top_n, 
+                                        topic_word_distrib=self.phi_mat, 
+                                        dtm=self.theta_mat,vocab=self.vocab)
 
-    def display_topics(self, feature_names, num_words=10):
+        self.score = score
+        return score 
+
+    def display_topics(self, num_words=10):
         for topic_idx, topic in enumerate(self.phi_mat):
             print("Topic %d:" % (topic_idx))
-            print(" ".join([feature_names[i]
+            print(" ".join([self.vocab[i]
                             for i in topic.argsort()[:-num_words - 1:-1]]))
     
     def topic_likelihood(self):
@@ -72,13 +82,13 @@ class LDA_model():
         fig.tight_layout()
         fig.legend(); 
     
-    def plot_top_words(self, feature_names, n_top_words=10):
+    def plot_top_words(self, n_top_words=10):
         fig, axes = plt.subplots(2, 3, figsize=(30, 15), sharex=True)
         axes = axes.flatten()
         
         for topic_idx, topic in enumerate(self.phi_mat):
             top_features_ind = topic.argsort()[:-n_top_words - 1:-1]
-            top_features = [feature_names[i] for i in top_features_ind]
+            top_features = [self.vocab[i] for i in top_features_ind]
             weights = topic[top_features_ind]
 
             ax = axes[topic_idx]
@@ -96,12 +106,15 @@ class LDA_model():
 
 
 if __name__ == '__main__':
-    X_train, X_test, y_train, y_test = get_data(num_samples=700000)
-    custom_stops = ['https', 'rt']
-    stop_words = get_stopwords(custom_stops)
-    vocab_count, count_vec = get_countvec(X_train, stop_words=stop_words, min_df=0.005, n_grams=(1,2))
-    model = LDA_model()
-    model.fit(count_vec, y_train)
+    X_train, X_test, y_train, y_test = get_data(num_samples=100000, balanced=True)
+    custom_stops = ['https', 'rt', 'co', 'amp', 'via', 'go', 'get', 'said', 'say', 'news', 'new', 'make', 'want', 
+                'trump', 'clinton', 'donald', 'donald trump', 'donaldtrump', 'says', 'hillary', 'hillaryclinton',
+                'hillary clinton', 'realdonaldtrump', 'would', 'let', 'video', 'like']
+    vectors = EDA_vec(X_train, y_train)
+    vectors.add_stop_words(custom_stops)
+    vocab, matrix = vectors.vectorize()
+    model = LDA_model(topics=5)
+    model.fit(matrix, y_train, vocab)
     with open('model.pkl', 'wb') as f:
         # Write the model to a file.
         pickle.dump(model, f)

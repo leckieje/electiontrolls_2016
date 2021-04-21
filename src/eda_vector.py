@@ -20,7 +20,7 @@ class EDA_vec():
         self.troll_freq = None
         self.freq_diff = None
         self.stop_words = stopwords.words('english')
-        self.features = None 
+        self.vocab = None 
         self.vec_data = None
         self.vec_shape = None
 
@@ -37,14 +37,14 @@ class EDA_vec():
             print('Please specify a vector type')
 
         self.vec_data = vectorizer.fit_transform(self.X)
-        self.features = vectorizer.get_feature_names()
+        self.vocab = vectorizer.get_feature_names()
         self.vec_shape = self.vec_data.shape
     
-        return self.features, self.vec_data.toarray()
+        return self.vocab, self.vec_data.toarray()
 
     # diff in word frequenncy
     def word_freq(self):
-        df = pd.DataFrame(data=self.vec_data.toarray(), columns=self.features)
+        df = pd.DataFrame(data=self.vec_data.toarray(), columns=self.vocab)
         df['legit'] = self.y
         legit = df[df['legit'] == 1]
         troll = df[df['legit'] == 0]
@@ -64,7 +64,7 @@ class EDA_vec():
         if not word_lst:
             word_lst = df.index[low_words+1:high_words+1]
         
-        labels = word_lst # adjust words here
+        labels = word_lst 
         legi = df.loc[word_lst, 1]
         trol = df.loc[word_lst, 0]
         
@@ -116,5 +116,5 @@ class EDA_vec():
 
     # vectorizer to dataframe
     def _get_dataframe(self):
-        return pd.DataFrame(data=self.vec_data.toarray(), columns=self.features)
+        return pd.DataFrame(data=self.vec_data.toarray(), columns=self.vocab)
         
