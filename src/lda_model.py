@@ -41,12 +41,12 @@ class LDA_model():
         return theta_mat
 
     def coherance_score(self, top_n=25):
-        score = metric_coherence_gensim(measure='u_mass', top_n=top_n, 
+        score_ = metric_coherence_gensim(measure='u_mass', top_n=top_n, 
                                         topic_word_distrib=self.phi_mat, 
                                         dtm=self.theta_mat,vocab=self.vocab)
 
-        self.score = score
-        return score 
+        self.score = score_
+        return score_ 
 
     def display_topics(self, num_words=10):
         for topic_idx, topic in enumerate(self.phi_mat):
@@ -62,7 +62,7 @@ class LDA_model():
         return pd.DataFrame({'topic': self.topic_hood, 'legit': self.y.values})
     
     def plot_topics_by_class(self):
-        fig, axs = plt.subplots(2)
+        fig, axs = plt.subplots(2, figsize=(8,10))
         topics = pd.DataFrame({'topic': self.topic_hood, 'legit': self.y.values})
         # split topic likelihood by class
         legit_topics = topics[topics['legit'] == 1] 
