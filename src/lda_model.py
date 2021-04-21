@@ -43,7 +43,7 @@ class LDA_model():
     def coherance_score(self, top_n=25):
         score_ = metric_coherence_gensim(measure='u_mass', top_n=top_n, 
                                         topic_word_distrib=self.phi_mat, 
-                                        dtm=self.X, vocab=self.vocab, 
+                                        dtm=self.X, vocab=np.array(self.vocab), 
                                         return_coh_model=False, return_mean=True)
 
         self.score = score_
