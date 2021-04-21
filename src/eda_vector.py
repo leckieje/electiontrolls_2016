@@ -39,7 +39,6 @@ class EDA_vec():
 
         self.vec_fit = vectorizer.fit(self.X)
         self.vocab = vectorizer.get_feature_names()
-        self.vec_shape = self.vec_fit.shape
     
         return self.vocab, self.vec_fit
 
