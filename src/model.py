@@ -46,7 +46,7 @@ def get_data(num_samples=50000, split=True):
     y = total_tweets['legit']
 
     if split:
-        X_train, X_test, y_train, y_test = train_test_split(X_res, y_res, test_size=0.25, stratify=y)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, stratify=y)
 
         return X_train, X_test, y_train, y_test
 
