@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 from nltk.corpus import stopwords, words
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.model_selection import train_test_split
-from imblearn.over_sampling import SMOTE 
 
 # generate stop words
 custom_stops = ['https', 'rt', 'co', 'amp', 'via', 'go', 'get', 'said', 'say', 'news', 'new', 'make', 'want', 
@@ -18,7 +17,7 @@ def get_random_sample(df, num_samples):
     return df_samp
 
 # load and split data
-def get_data(num_samples=50000, balanced=True, split=True):
+def get_data(num_samples=50000, split=True):
     # load data
     legit = pd.read_csv('data/legit_tweets.csv', parse_dates = ['date'])
     troll = pd.read_csv('data/troll_tweets.csv', parse_dates = ['date'])
@@ -46,23 +45,9 @@ def get_data(num_samples=50000, balanced=True, split=True):
     X = total_tweets['text']
     y = total_tweets['legit']
 
-    # oversample for balanced classes andd train/test split
-    if balanced:
-        sm = SMOTE(k_neighbors=5, n_jobs=-1)
-        X_res, y_res = sm.fit_resample(X,y)
-    
-        if split:
-            X_train, X_test, y_train, y_test = train_test_split(X_res, y_res, test_size=0.25, stratify=y)
-            
-            return X_train, X_test, y_train, y_test
-        
-        else:
-            return X_res, y_res
-    
-    else:
-        if split:
-            X_train, X_test, y_train, y_test = train_test_split(X_res, y_res, test_size=0.25, stratify=y)
+    if split:
+        X_train, X_test, y_train, y_test = train_test_split(X_res, y_res, test_size=0.25, stratify=y)
 
-            return X_train, X_test, y_train, y_test
+        return X_train, X_test, y_train, y_test
 
-        return X, y
+    return X, y
