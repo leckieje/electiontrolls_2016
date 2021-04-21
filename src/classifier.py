@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split, KFold
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import plot_confusion_matrix, roc_curve
+from sklearn.metrics import plot_confusion_matrix, roc_curve, recall_score, precision_score
 from sklearn.inspection import permutation_importance, plot_partial_dependence, partial_dependence
 
 
@@ -16,18 +16,35 @@ class RandForest():
                                         max_leaf_nodes=max_leaf, oob_score=True)
         self.X = None
         self.y = None
+        self.X_test = None
+        self.y_test = None
         self.fit_class = None
         self.acc = None
         self.oob = None
+        self.probas = None
+        self.y_hat = None
+        self.recall = None
+        self.precision = None
 
     def fit(self, X, y):
         self.X = X
         self.y = y
         self.fit_class = self.forest.fit(X, y)
 
-    def score(self, X_test, y_test):
-        self.acc = self.forest.score(X_test, y_test)
+    def predict(self, X_test, y_test):
+        self.X_test = X_test
+        self.y_test = y_test
+        self.probas = self.forest.predict_proba(X)
+        self.y_hat = self.forest.predict(X)
+
+    def score(self):
+        self.acc = self.forest.score(self.X_test, self.y_test)
         self.oob = self.forest.oob_score_
+        self.recall = recall_score(self.y_test, self.y_hat)
+        self.precision = precision_score(self.y_test, self.y_hat)
+
+    def plot_confusion(self):
+        plot_confusion_matrix(self.forest, self.X_test, self.y_test)
 
     # feature importances
         # gini
@@ -46,7 +63,6 @@ class RandForest():
         sorted_idx = perms.importances_mean.argsort()
         ax.boxplot(perms.importances[sorted_idx].T, vert=False, labels=sorted_idx)
         ax.set_title('Permutation Importance');
-
 
     
 
