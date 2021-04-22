@@ -22,7 +22,6 @@ class RandForest():
         self.acc = None
         self.oob = None
         self.probas = None
-        self.y_hat = None
         self.recall = None
         self.precision = None
 
@@ -33,8 +32,8 @@ class RandForest():
 
     def predict(self, X_test):
         self.X_test = X_test
-        probas = self.forest.predict_proba(X)
-        y_hat = self.forest.predict(X)
+        probas = self.forest.predict_proba(X_test)
+        y_hat = self.forest.predict(X_test)
 
         return probas, y_hat
 
