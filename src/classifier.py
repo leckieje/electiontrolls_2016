@@ -71,8 +71,8 @@ class RandForest():
         # Set up axis
         ax = ax if ax else plt.gca()
         im = ax.imshow(cm)
-        ax.set_xticks(cm.shape[0])
-        ax.set_yticks(cm.shape[0])
+        ax.set_xticks(range(cm.shape[0]))
+        ax.set_yticks(range(cm.shape[0]))
         if labels:
             ax.set_xticklabels(labels)
             ax.set_yticklabels(labels)
