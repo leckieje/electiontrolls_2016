@@ -81,7 +81,7 @@ class RandForest():
         # Plot values
         for i in range(cm.shape[1]):
             for j in range(cm.shape[0]):
-                ax.text(j, i, cm[i, j], ha='center', va='center')
+                ax.text(j, i, cm[i, j], ha='center', va='center', color="w")
         plt.show()
 
 

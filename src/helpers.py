@@ -96,6 +96,30 @@ def plot_roc_curve(X, y, lda=False, n_estimators=1000, max_depth=100, max_leaf=N
     
     return thresh
 
+# Precision/Recall Curve
+def plot_prec_roc_curve(X, y, lda=False, n_estimators=1000, max_depth=100, max_leaf=None, thresh=-1):
+    
+    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.25, 
+                                                        shuffle=True, stratify=y)
+    fig, ax = plt.subplots()
+    
+    model = RandForest(n_estimators=n_estimators, max_depth=max_depth, 
+                            max_leaf=max_leaf, max_features=X.shape[1])
+    model.fit(X_train, y_train)
+    probas, y_hat = model.predict(X_test, thresh=thresh)
+    precision, recall, thresh = precision_recall_curve(y_test, probas[:,1])
+    
+    ax.plot(precision, recall)
+    ax.set_xlabel('Recall')
+    ax.set_ylabel('Precision')
+    
+    if lda:
+        ax.set_title(f'Precision/Recall Curve - with LDA')
+    else:
+        ax.set_title(f'Precision/Recall Curve - w/out LDA')
+    
+    return thresh
+
 # Parameter testing
 def test_forest_depth(X, y, depth_lst):
     accuracy = []
