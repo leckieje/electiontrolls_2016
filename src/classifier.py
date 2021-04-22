@@ -46,7 +46,7 @@ class RandForest():
         self.precision = precision_score(y_test, y_hat)
 
     def plot_confusion(self):
-        plot_confusion_matrix(self.forest, self.X_test, self.y_test, labels=['legit', 'troll'])
+        plot_confusion_matrix(self.forest, self.X_test, self.y_test)
 
     # feature importances
         # gini
