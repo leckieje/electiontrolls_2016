@@ -67,23 +67,23 @@ class RandForest():
         -------------------
             None
     """
-    # Get Confusion Matrix
-    cm = confusion_matrix(self.y_test, self.y_pred)
-    # Set up axis
-    ax = ax if ax else plt.gca()
-    im = ax.imshow(cm)
-    ax.set_xticks(cm.shape[0])
-    ax.set_yticks(cm.shape[0])
-    if labels:
-        ax.set_xticklabels(labels)
-        ax.set_yticklabels(labels)
-    ax.set_xlabel('Predicted Label')
-    ax.set_ylabel('True Label')
-    # Plot values
-    for i in range(cm.shape[1]):
-        for j in range(cm.shape[0]):
-            ax.text(j, i, cm[i, j], ha='center', va='center')
-    plt.show()
+        # Get Confusion Matrix
+        cm = confusion_matrix(self.y_test, self.y_pred)
+        # Set up axis
+        ax = ax if ax else plt.gca()
+        im = ax.imshow(cm)
+        ax.set_xticks(cm.shape[0])
+        ax.set_yticks(cm.shape[0])
+        if labels:
+            ax.set_xticklabels(labels)
+            ax.set_yticklabels(labels)
+        ax.set_xlabel('Predicted Label')
+        ax.set_ylabel('True Label')
+        # Plot values
+        for i in range(cm.shape[1]):
+            for j in range(cm.shape[0]):
+                ax.text(j, i, cm[i, j], ha='center', va='center')
+        plt.show()
 
 
     # feature importances
