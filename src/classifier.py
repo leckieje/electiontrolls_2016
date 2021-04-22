@@ -24,6 +24,7 @@ class RandForest():
         self.recall = None
         self.precision = None
         self.y_pred = None
+        self.f_one = None
 
     def fit(self, X, y):
         self.X = X
@@ -50,22 +51,13 @@ class RandForest():
         self.acc = accuracy_score(y_test, y_hat)
         self.recall = recall_score(y_test, y_hat)
         self.precision = precision_score(y_test, y_hat)
+        self.f_one = f1_score(y_test, y_hat)
 
     # def plot_confusion(self):
     #     plot_confusion_matrix(self.forest, self.X_test, self.y_test)
 
     def plot_confusion(self, labels=['Legit', 'Troll'], ax=None):
-        """
-            Plot and show a confusion matrix
-            Parameters
-            -------------------
-                true : True Y labels
-                pred : Predicted labels
-                ax : A matplotlib axis to be plotted, if none, one will be created
-            Returns
-            -------------------
-                None
-        """
+ 
         # Get Confusion Matrix
         cm = confusion_matrix(self.y_test, self.y_pred)
         # Set up axis

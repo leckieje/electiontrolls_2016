@@ -48,6 +48,7 @@ def eval_random_forest(X, y, folds=15, n_estimators=500, max_depth=15, max_leaf=
     oob_  = []
     rec   = []
     prec  = []
+    f_1   = []
     iters = 0
     
     for train, test in kf.split(X):
@@ -63,13 +64,14 @@ def eval_random_forest(X, y, folds=15, n_estimators=500, max_depth=15, max_leaf=
         oob_.append(forest.oob)
         rec.append(forest.recall)
         prec.append(forest.precision)
-        
+        f_1.append(forest.f_one)
+
         iters += 1
         if iters % 5 == 0:
             print(iters)
         
     
-    return np.mean(accur), np.mean(oob_), np.mean(rec), np.mean(prec), forest
+    return np.mean(accur), np.mean(oob_), np.mean(rec), np.mean(prec), np.mean(f_1), forest
 
 # ROC curve
 def plot_roc_curve(X, y, lda=False, n_estimators=1000, max_depth=100, max_leaf=None):
@@ -128,12 +130,32 @@ def test_forest_depth(X, y, depth_lst):
         
     return accuracy
 
-def test_forest_estimators(X, y, est_lst):
-    accuracy = []
+def test_forest_estimators(X, y, est_lst, thresh=.5, max_features='log2'):
+    accur = []
+    oob_  = []
+    rec   = []
+    prec  = []
+    f_1   = []
+
     for est in est_lst:
-        accuracy.append(eval_random_forest(X, y, n_estimators=est, max_depth=50))
-        
-    return accuracy
+        forest = RandForest(n_estimators=est, max_depth=100, max_leaf=100, 
+                            max_features=max_features, class_weight='balanced')
+        forest.fit(X, y)
+        probas, y_hat = forest.predict(matrix_test, thresh=th_hold)
+        forest.score(y_test, y_hat)
+        accur.append(forest.acc)
+        oob_.append(forest.oob)
+        rec.append(forest.recal)
+        prec.append(forest.precision)
+        f_1.append(forest.f_one)
+        print('Random Forest Scores -- w/out LDA')
+        print(f'accuracy = {forest.acc}')
+        print(f'oob = {forest.oob}')
+        print(f'recall = {forest.recall}')
+        print(f'precision = {forest.precision}')
+        print(f'f_1 score = {forest.f_one}')
+    
+    return [accur, oob_, rec, prec, f_1]
 
 def test_max_leafs(X, y, leaf_lst):
     accuracy = []
