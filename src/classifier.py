@@ -3,9 +3,8 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split, KFold
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import plot_confusion_matrix, roc_curve, recall_score, precision_score, accuracy_score
+from sklearn.metrics import confusion_matrix, roc_curve, recall_score, precision_score, accuracy_score
 from sklearn.inspection import permutation_importance, plot_partial_dependence, partial_dependence
-
 
 
 class RandForest():
