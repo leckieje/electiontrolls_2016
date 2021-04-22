@@ -10,10 +10,11 @@ from sklearn.inspection import permutation_importance, plot_partial_dependence, 
 
 class RandForest():
 
-    def __init__(self, n_estimators, max_depth, max_leaf, max_features):
+    def __init__(self, n_estimators, max_depth, max_leaf, max_features, class_weight='balanced'):
         self.forest = RandomForestClassifier(n_estimators=n_estimators, 
                                         max_depth=max_depth, n_jobs=-1, 
-                                        max_leaf_nodes=max_leaf, oob_score=True)
+                                        max_leaf_nodes=max_leaf, oob_score=True,
+                                        class_weight=class_weight)
         self.X = None
         self.y = None
         self.X_test = None

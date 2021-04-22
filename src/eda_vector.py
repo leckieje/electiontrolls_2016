@@ -42,10 +42,7 @@ class EDA_vec():
     
         return self.vocab, self.vec_fit
 
-    # def transform(self, X)    
-    #         self.trans = self.vec_fit
-
-    # diff in word frequenncy
+    # diff in word frequenncy ## TO DO: VEC_DATA NO LONGER EXISTS. REPLACE BELOW!!!!
     def word_freq(self):
         df = pd.DataFrame(data=self.vec_data.toarray(), columns=self.vocab)
         df['legit'] = self.y
