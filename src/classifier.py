@@ -56,17 +56,17 @@ class RandForest():
     #     plot_confusion_matrix(self.forest, self.X_test, self.y_test)
 
     def plot_confusion(self, labels=['Legit', 'Troll'], ax=None):
-    """
-        Plot and show a confusion matrix
-         Parameters
-        -------------------
-            true : True Y labels
-            pred : Predicted labels
-            ax : A matplotlib axis to be plotted, if none, one will be created
-         Returns
-        -------------------
-            None
-    """
+        """
+            Plot and show a confusion matrix
+            Parameters
+            -------------------
+                true : True Y labels
+                pred : Predicted labels
+                ax : A matplotlib axis to be plotted, if none, one will be created
+            Returns
+            -------------------
+                None
+        """
         # Get Confusion Matrix
         cm = confusion_matrix(self.y_test, self.y_pred)
         # Set up axis
