@@ -21,7 +21,8 @@ def get_data(num_samples=50000, split=True):
     # load data
     legit = pd.read_csv('data/legit_tweets.csv', parse_dates = ['date'])
     troll = pd.read_csv('data/troll_tweets.csv', parse_dates = ['date'])
-    legit['legit'] = 1
+    troll['legit'] = 1
+    legit['legit'] = 0
 
     # limit troll timeframe
     troll_summer = troll[(troll['date'] >= '2016-06-28') & (troll['date'] <= '2016-11-02')]
