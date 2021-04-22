@@ -12,12 +12,12 @@ class EDA_vec():
     def __init__(self, X, y):
         self.X = X
         self.y = y.values
-        self.legit_count = sum(y)
-        self.troll_count = len(y) - sum(y)
-        self.troll_dist = (len(y) - sum(y)) / len(y)
-        self.legit_dist = sum(y) / len(y)
-        self.legit_freq = None
+        self.troll_count = sum(y)
+        self.legit_count = len(y) - sum(y)
+        self.legit_dist = (len(y) - sum(y)) / len(y)
+        self.troll_dist = sum(y) / len(y)
         self.troll_freq = None
+        self.legit_freq = None
         self.freq_diff = None
         self.stop_words = stopwords.words('english')
         self.vocab = None 
@@ -46,8 +46,8 @@ class EDA_vec():
     def word_freq(self):
         df = pd.DataFrame(data=self.vec_data.toarray(), columns=self.vocab)
         df['legit'] = self.y
-        legit = df[df['legit'] == 1]
-        troll = df[df['legit'] == 0]
+        legit = df[df['legit'] == 0]
+        troll = df[df['legit'] == 1]
         legit_fr = legit.sum().apply(lambda x: x/len(legit))
         troll_fr = troll.sum().apply(lambda x: x/len(troll))
         self.legit_freq = legit_fr.sort_values(ascending=False)

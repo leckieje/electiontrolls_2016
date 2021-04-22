@@ -72,8 +72,8 @@ class LDA_model():
         fig, axs = plt.subplots(2, figsize=(8,10))
         topics = pd.DataFrame({'topic': self.topic_hood, 'legit': self.y.values})
         # split topic likelihood by class
-        legit_topics = topics[topics['legit'] == 1] 
-        troll_topics = topics[topics['legit'] == 0]
+        legit_topics = topics[topics['legit'] == 0] 
+        troll_topics = topics[topics['legit'] == 1]
         
         axs[0].hist(legit_topics['topic'], color='blue', label='Legitmate Tweets')
         axs[1].hist(troll_topics['topic'], color='orange', label='Troll Tweets')
@@ -106,7 +106,7 @@ class LDA_model():
             ax.tick_params(axis='both', which='major', labelsize=20)
             for i in 'top right left'.split():
                 ax.spines[i].set_visible(False)
-            fig.suptitle('Top Words by Topic', fontsize=40)
+            fig.suptitle('Top Words by Topic', fontsize=20)
 
         plt.subplots_adjust(top=0.90, bottom=0.05, wspace=0.90, hspace=0.3)
         plt.show()

@@ -50,9 +50,14 @@ class RandForest():
 
     # feature importances
         # gini
-    def chart_gini_import(self):
+    def chart_gini_import(self, features=-1, vocab=None):
         fig, ax = plt.subplots()
-        feature_scores = pd.Series(self.forest.feature_importances_, index=list(range(1, self.X.shape[1]+1)))
+        
+        if features == -1:
+            feature_scores = pd.Series(self.forest.feature_importances_, index=list(range(1, self.X.shape[1]+1)))
+        else:
+            feature_scores = pd.Series(self.forest.feature_importances_, index=vocab[:features]) # NOT CORRECT, NEEED SORTED FEATURES
+        
         feature_scores = feature_scores.sort_values()
         ax = feature_scores.plot(kind='barh', figsize=(10,4))
         ax.set_title('Gini Importance')
