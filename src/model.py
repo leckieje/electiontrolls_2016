@@ -24,8 +24,8 @@ def clean_hydrated(filepath):
     return df
 
 # get random samples
-def get_random_sample(df, num_samples, replace=False):
-    samp_idx = np.random.choice(range(len(df)), size=num_samples, replace=replace)
+def get_random_sample(df, num_samples):
+    samp_idx = np.random.choice(range(len(df)), size=num_samples)
     df_samp = df.iloc[samp_idx, :]
     return df_samp
 
@@ -47,7 +47,7 @@ def get_data(num_samples=50000, split=True, balanced=False):
     if num_samples > 0:
 
         if balanced:
-            troll_samp = get_random_sample(troll_summer, (num_samples/2), replace=True)
+            troll_samp = get_random_sample(troll_summer, (num_samples/2))
             legit_samp = get_random_sample(legit, (num_samples/2))
         else:
             troll_samp = get_random_sample(troll_summer, int(0.08 * num_samples))
