@@ -31,16 +31,16 @@ class RandForest():
         self.y = y
         self.fit_class = self.forest.fit(X, y)
 
-    def predict(self, X):
+    def predict(self, X_test):
+        self.X_test = X_test
         probas = self.forest.predict_proba(X)
         y_hat = self.forest.predict(X)
 
         return probas, y_hat
 
-    def score(self, X_test, y_test, y_hat):
-        self.X_test = X_test
+    def score(self, y_test, y_hat):
         self.y_test = y_test
-        self.acc = self.forest.score(X_test, y_test)
+        self.acc = self.forest.score(self.X_test, y_test)
         self.oob = self.forest.oob_score_
         self.recall = recall_score(y_test, y_hat)
         self.precision = precision_score(y_test, y_hat)
