@@ -31,17 +31,19 @@ class RandForest():
         self.y = y
         self.fit_class = self.forest.fit(X, y)
 
-    def predict(self, X_test, y_test):
+    def predict(self, X):
+        probas = self.forest.predict_proba(X)
+        y_hat = self.forest.predict(X)
+
+        return probas, y_hat
+
+    def score(self, X_test, y_test, y_hat):
         self.X_test = X_test
         self.y_test = y_test
-        self.probas = self.forest.predict_proba(X)
-        self.y_hat = self.forest.predict(X)
-
-    def score(self):
-        self.acc = self.forest.score(self.X_test, self.y_test)
+        self.acc = self.forest.score(X_test, y_test)
         self.oob = self.forest.oob_score_
-        self.recall = recall_score(self.y_test, self.y_hat)
-        self.precision = precision_score(self.y_test, self.y_hat)
+        self.recall = recall_score(y_test, y_hat)
+        self.precision = precision_score(y_test, y_hat)
 
     def plot_confusion(self):
         plot_confusion_matrix(self.forest, self.X_test, self.y_test)
