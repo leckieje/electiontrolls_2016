@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.model_selection import KFold
-from sklearn.metrics import recall_score, precision_score, plot_confusion_matrix
+from sklearn.metrics import recall_score, precision_score, plot_confusion_matrix, precision_recall_curve
 from sklearn.metrics import roc_curve
 from sklearn.model_selection import train_test_split
 from src.lda_model import *
@@ -41,7 +41,7 @@ def plot_topic_scores(scores):
 # RANDOM FOREST
 
 # Random Forest Evaluation, X = theta(w/LDA) or matrix(w/o LDA), y = y_train
-def eval_random_forest(X, y, folds=15, n_estimators=500, max_depth=15, max_leaf=None):
+def eval_random_forest(X, y, folds=15, n_estimators=500, max_depth=15, max_leaf=None, thresh=-1):
     
     kf = KFold(n_splits=folds, shuffle=True)
     accur = []
@@ -56,7 +56,7 @@ def eval_random_forest(X, y, folds=15, n_estimators=500, max_depth=15, max_leaf=
         forest = RandForest(n_estimators=n_estimators, max_depth=max_depth, 
                             max_leaf=max_leaf, max_features=theta.shape[1])
         forest.fit(X[train], y.iloc[train])
-        probas, y_hat = forest.predict(X[test])
+        probas, y_hat = forest.predict(X[test], thresh=thresh)
         forest.score(y.iloc[test], y_hat)
         
         accur.append(forest.acc)
@@ -79,9 +79,9 @@ def plot_roc_curve(X, y, lda=False, n_estimators=1000, max_depth=100, max_leaf=N
     fig, ax = plt.subplots()
     
     model = RandForest(n_estimators=n_estimators, max_depth=max_depth, 
-                            max_leaf=max_leaf, max_features=theta.shape[1])
+                            max_leaf=max_leaf, max_features=X.shape[1])
     model.fit(X_train, y_train)
-    probas, y_hat = model.predict(X_test)
+    probas, y_hat = model.predict(X_test, thresh=-1)
     fpr, tpr, thresh = roc_curve(y_test, probas[:,1])
     
     ax.plot(fpr, tpr)

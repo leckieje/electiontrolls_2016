@@ -19,17 +19,17 @@ class RandForest():
         self.y = None
         self.X_test = None
         self.y_test = None
-        self.fit_class = None
         self.acc = None
         self.oob = None
         self.probas = None
         self.recall = None
         self.precision = None
+        self.y_pred = None
 
     def fit(self, X, y):
         self.X = X
         self.y = y
-        self.fit_class = self.forest.fit(X, y)
+        self.forest.fit(X, y)
 
     def predict(self, X_test, thresh=-1):
         self.X_test = X_test
@@ -41,6 +41,8 @@ class RandForest():
         else: 
             y_hat = self.forest.predict(X_test)
 
+        self.y_pred = y_hat
+
         return probs, y_hat
 
     def score(self, y_test, y_hat):
@@ -50,8 +52,39 @@ class RandForest():
         self.recall = recall_score(y_test, y_hat)
         self.precision = precision_score(y_test, y_hat)
 
-    def plot_confusion(self):
-        plot_confusion_matrix(self.forest, self.X_test, self.y_test)
+    # def plot_confusion(self):
+    #     plot_confusion_matrix(self.forest, self.X_test, self.y_test)
+
+    def plot_confusion(self, labels=['Legit', 'Troll'], ax=None):
+    """
+        Plot and show a confusion matrix
+         Parameters
+        -------------------
+            true : True Y labels
+            pred : Predicted labels
+            ax : A matplotlib axis to be plotted, if none, one will be created
+         Returns
+        -------------------
+            None
+    """
+    # Get Confusion Matrix
+    cm = confusion_matrix(self.y_test, self.y_pred)
+    # Set up axis
+    ax = ax if ax else plt.gca()
+    im = ax.imshow(cm)
+    ax.set_xticks(cm.shape[0])
+    ax.set_yticks(cm.shape[0])
+    if labels:
+        ax.set_xticklabels(labels)
+        ax.set_yticklabels(labels)
+    ax.set_xlabel('Predicted Label')
+    ax.set_ylabel('True Label')
+    # Plot values
+    for i in range(cm.shape[1]):
+        for j in range(cm.shape[0]):
+            ax.text(j, i, cm[i, j], ha='center', va='center')
+    plt.show()
+
 
     # feature importances
         # gini
