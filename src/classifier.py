@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split, KFold
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import plot_confusion_matrix, roc_curve, recall_score, precision_score
+from sklearn.metrics import plot_confusion_matrix, roc_curve, recall_score, precision_score, accuracy_score
 from sklearn.inspection import permutation_importance, plot_partial_dependence, partial_dependence
 
 
@@ -31,17 +31,22 @@ class RandForest():
         self.y = y
         self.fit_class = self.forest.fit(X, y)
 
-    def predict(self, X_test):
+    def predict(self, X_test, thresh=-1):
         self.X_test = X_test
-        probas = self.forest.predict_proba(X_test)
-        y_hat = self.forest.predict(X_test)
+        probs = self.forest.predict_proba(X_test)
+        self.probas = probs
 
-        return probas, y_hat
+        if thresh > 0:
+            y_hat = (probs[:,1] >= thresh).astype('int')
+        else: 
+            y_hat = self.forest.predict(X_test)
+
+        return probs, y_hat
 
     def score(self, y_test, y_hat):
         self.y_test = y_test
-        self.acc = self.forest.score(self.X_test, y_test)
         self.oob = self.forest.oob_score_
+        self.acc = accuracy_score(y_test, y_hat)
         self.recall = recall_score(y_test, y_hat)
         self.precision = precision_score(y_test, y_hat)
 

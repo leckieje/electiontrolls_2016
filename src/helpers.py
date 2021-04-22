@@ -6,6 +6,7 @@ from sklearn.metrics import recall_score, precision_score, plot_confusion_matrix
 from sklearn.metrics import roc_curve
 from sklearn.model_selection import train_test_split
 from src.lda_model import *
+from src.classifier import *
 
 
 # COHERANCE SCORE
