@@ -96,7 +96,7 @@ def plot_roc_curve(X, y, lda=False, n_estimators=1000, max_depth=100, max_leaf=N
     else:
         ax.set_title(f'Random Forest ROC Curve - w/out LDA')
     
-    return thresh
+    return [fpr, tpr, thresh]
 
 # Precision/Recall Curve
 def plot_prec_roc_curve(X, y, lda=False, n_estimators=1000, max_depth=100, max_leaf=None, thresh=-1):
@@ -120,17 +120,44 @@ def plot_prec_roc_curve(X, y, lda=False, n_estimators=1000, max_depth=100, max_l
     else:
         ax.set_title(f'Precision/Recall Curve - w/out LDA')
     
-    return thresh
+    return [fpr, tpr, thresh]
 
 # Parameter testing
-def test_forest_depth(X, y, depth_lst):
-    accuracy = []
-    for depth in depth_lst:
-        accuracy.append(eval_random_forest(X, y, max_depth=depth))
-        
-    return accuracy
+def test_forest_depth(X, y, depth_lst, thresh=.5, max_features='log2', lda=False):
+    accur = []
+    oob_  = []
+    rec   = []
+    prec  = []
+    f_1   = []
 
-def test_forest_estimators(X, y, est_lst, thresh=.5, max_features='log2'):
+    for depth in depth_lst:
+        forest = RandForest(n_estimators=est, max_depth=depth, max_leaf=100, 
+                            max_features=max_features, class_weight='balanced')
+        forest.fit(X, y)
+        probas, y_hat = forest.predict(matrix_test, thresh=th_hold)
+        forest.score(y_test, y_hat)
+        accur.append(forest.acc)
+        oob_.append(forest.oob)
+        rec.append(forest.recal)
+        prec.append(forest.precision)
+        f_1.append(forest.f_one)
+        
+        if lda:
+            print('Random Forest Scores -- w/ LDA')
+        else:
+            print('Random Forest Scores -- w/out LDA')
+
+        print(f'Depth = {depth}')
+        print(f'accuracy = {forest.acc}')
+        print(f'oob = {forest.oob}')
+        print(f'recall = {forest.recall}')
+        print(f'precision = {forest.precision}')
+        print(f'f_1 score = {forest.f_one}')
+        print('-----------------')
+    
+    return [accur, oob_, rec, prec, f_1]
+
+def test_forest_estimators(X, y, est_lst, thresh=.5, max_features='log2', lda=False):
     accur = []
     oob_  = []
     rec   = []
@@ -148,12 +175,19 @@ def test_forest_estimators(X, y, est_lst, thresh=.5, max_features='log2'):
         rec.append(forest.recal)
         prec.append(forest.precision)
         f_1.append(forest.f_one)
-        print('Random Forest Scores -- w/out LDA')
+        
+        if lda:
+            print('Random Forest Scores -- w/ LDA')
+        else:
+            print('Random Forest Scores -- w/out LDA')
+
+        print(f'Estimators = {est}')
         print(f'accuracy = {forest.acc}')
         print(f'oob = {forest.oob}')
         print(f'recall = {forest.recall}')
         print(f'precision = {forest.precision}')
         print(f'f_1 score = {forest.f_one}')
+        print('-----------------')
     
     return [accur, oob_, rec, prec, f_1]
 

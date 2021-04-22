@@ -47,8 +47,8 @@ def get_data(num_samples=50000, split=True, balanced=False):
     if num_samples > 0:
 
         if balanced:
-            troll_samp = get_random_sample(troll_summer, num_samples)
-            legit_samp = get_random_sample(legit, num_samples)
+            troll_samp = get_random_sample(troll_summer, (num_samples/2))
+            legit_samp = get_random_sample(legit, (num_samples/2)
         else:
             troll_samp = get_random_sample(troll_summer, int(0.08 * num_samples))
             legit_samp = get_random_sample(legit, int((1 - 0.08) * num_samples))
