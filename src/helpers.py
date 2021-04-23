@@ -120,7 +120,7 @@ def plot_prec_roc_curve(X, y, lda=False, n_estimators=1000, max_depth=100, max_l
     else:
         ax.set_title(f'Precision/Recall Curve - w/out LDA')
     
-    return [fpr, tpr, thresh]
+    return [precision, recall, thresh]
 
 # Parameter testing
 def test_forest_depth(X, y, depth_lst, thresh=.5, max_features='log2', lda=False):

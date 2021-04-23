@@ -31,7 +31,7 @@ class RandForest():
         self.y = y
         self.forest.fit(X, y)
 
-    def predict(self, X_test, thresh=-1):
+    def predict(self, X_test, thresh=0):
         self.X_test = X_test
         probs = self.forest.predict_proba(X_test)
         self.probas = probs
@@ -84,13 +84,17 @@ class RandForest():
         
         if features == -1:
             feature_scores = pd.Series(self.forest.feature_importances_, index=list(range(1, self.X.shape[1]+1)))
+            feature_scores = feature_scores.sort_values()
+            ax = feature_scores.plot(kind='barh', figsize=(10,4))
+            ax.set_title('Gini Importance')
+            ax.set_xlabel('Avg. Contribution to Info Gain');
         else:
-            feature_scores = pd.Series(self.forest.feature_importances_, index=vocab[:features]) # NOT CORRECT, NEEED SORTED FEATURES
+            feature_scores = pd.Series(self.forest.feature_importances_, index=vocab) # NOT CORRECT, NEEED SORTED FEATURES
+            feature_scores = feature_scores.sort_values()
+            ax = feature_scores[:features].plot(kind='barh', figsize=(10,4))
+            ax.set_title('Gini Importance')
+            ax.set_xlabel('Avg. Contribution to Info Gain');
         
-        feature_scores = feature_scores.sort_values()
-        ax = feature_scores.plot(kind='barh', figsize=(10,4))
-        ax.set_title('Gini Importance')
-        ax.set_xlabel('Avg. Contribution to Info Gain');
 
         # permutations
     def chart_permutation_import(self, n_repeats=5):
