@@ -25,12 +25,13 @@ def clean_hydrated(filepath):
 
 # get random samples
 def get_random_sample(df, num_samples, replace=False):
-    samp_idx = np.random.choice(range(len(df)), size=num_samples, replace=replace)
+    rand = np.random.RandomState(55)
+    samp_idx = rand.choice(range(len(df)), size=num_samples, replace=replace)
     df_samp = df.iloc[samp_idx, :]
     return df_samp
 
 # load and split data
-def get_data(num_samples=50000, split=True, balanced=False):
+def get_data():
     # load data
     legit = pd.read_csv('data/legit_tweets.csv', parse_dates = ['date'])
     troll = pd.read_csv('data/troll_tweets.csv', parse_dates = ['date'])
@@ -40,33 +41,41 @@ def get_data(num_samples=50000, split=True, balanced=False):
     # limit troll timeframe
     troll_summer = troll[(troll['date'] >= '2016-06-28') & (troll['date'] <= '2016-11-02')]
 
-    # get samples
-    # if balanced:
-    #     troll_samp = get_random_sample(troll_summer, int(num_samples/2))
-    #     legit_samp = get_random_sample(legit, int(num_samples/2))
-    if num_samples > 0:
-
-        if balanced:
-            troll_samp = get_random_sample(troll_summer, int((num_samples/2)), replace=True)
-            legit_samp = get_random_sample(legit, int((num_samples/2)))
-        else:
-            troll_samp = get_random_sample(troll_summer, int(0.08 * num_samples))
-            legit_samp = get_random_sample(legit, int((1 - 0.08) * num_samples))
-    else:
-        troll_samp = troll_summer
-        legit_samp = legit
-
     # combine legit and troll tweets
-    total_tweets = pd.concat([legit_samp.loc[:,['text','legit']], troll_samp.loc[:,['text','legit']]])
+    total_tweets = pd.concat([legit.loc[:,['text','legit']], troll_summer.loc[:,['text','legit']]])
     total_tweets.reset_index(drop=True, inplace=True)
 
     # set X and y
     X = total_tweets['text']
     y = total_tweets['legit']
 
-    if split:
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, stratify=y)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, stratify=y, random_state=45)
 
+    return X_train, X_test, y_train, y_test
+
+def get_samples(X_train, X_test, y_train, y_test, samp_size=0.1):
+
+    train = pd.DataFrame({'text': X_train, 'legit': y_train})
+    test = pd.DataFrame({'text': X_test, 'legit': y_test})
+
+    train = get_random_sample(train, int(len(train)*samp_size))
+    test = get_random_sample(test, int(len(test)*samp_size))
+
+    train_Xout = train['text']
+    train_yout = train['legit']
+
+    test_Xout = test['text']
+    test_yout = test['legit']
+
+    return train_Xout, test_Xout, train_yout, test_yout
+
+def get_data_wrapper(sample=True, samp_size=0.1):
+
+    X_train, X_test, y_train, y_test = get_data()
+
+    if sample:
+        train_Xout, test_Xout, train_yout, test_yout = get_samples(X_train, X_test, y_train, y_test, samp_size=samp_size)
+        return train_Xout, test_Xout, train_yout, test_yout
+    
+    else:
         return X_train, X_test, y_train, y_test
-
-    return X, y
