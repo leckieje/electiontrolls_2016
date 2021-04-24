@@ -89,9 +89,25 @@ class RandForest():
             ax.set_title('Gini Importance')
             ax.set_xlabel('Avg. Contribution to Info Gain');
         else:
-            feature_scores = pd.Series(self.forest.feature_importances_, index=vocab) # NOT CORRECT, NEEED SORTED FEATURES
-            feature_scores = feature_scores.sort_values()
+            feature_scores = pd.Series(self.forest.feature_importances_, index=vocab)
+            feature_scores = feature_scores.sort_values(ascending=False)
             ax = feature_scores[:features].plot(kind='barh', figsize=(10,4))
+            ax.set_title('Gini Importance')
+            ax.set_xlabel('Avg. Contribution to Info Gain');
+
+    def chart_gini_import_(self, features=-1, vocab=None):
+        fig, ax = plt.subplots()
+        
+        if features == -1:
+            feature_scores = pd.Series(self.forest.feature_importances_, index=list(range(1, self.X.shape[1]+1)))
+            feature_scores = feature_scores.sort_values()
+            ax = feature_scores.plot(kind='barh', figsize=(10,4))
+            ax.set_title('Gini Importance')
+            ax.set_xlabel('Avg. Contribution to Info Gain');
+        else:
+            feature_scores = pd.Series(self.forest.feature_importances_, index=vocab)
+            feature_scores = feature_scores.sort_values(ascending=False)
+            ax = feature_scores[:features:-1].plot(kind='barh', figsize=(10,4))
             ax.set_title('Gini Importance')
             ax.set_xlabel('Avg. Contribution to Info Gain');
         
