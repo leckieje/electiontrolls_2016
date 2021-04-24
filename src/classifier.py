@@ -106,8 +106,8 @@ class RandForest():
             ax.set_xlabel('Avg. Contribution to Info Gain');
         else:
             feature_scores = pd.Series(self.forest.feature_importances_, index=vocab)
-            feature_scores = feature_scores.sort_values(ascending=False)
-            ax = feature_scores[:features:-1].plot(kind='barh', figsize=(10,4))
+            feature_scores = feature_scores.sort_values(ascending=True)
+            ax = feature_scores[:features].plot(kind='barh', figsize=(10,4))
             ax.set_title('Gini Importance')
             ax.set_xlabel('Avg. Contribution to Info Gain');
         

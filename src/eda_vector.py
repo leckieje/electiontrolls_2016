@@ -23,7 +23,6 @@ class EDA_vec():
         self.vocab = None 
         self.vec_fit = None
         self.vec_shape = None
-        self.vec_data = None
 
     def add_stop_words(self, custom_stops):
         sw = self.stop_words + custom_stops
@@ -42,9 +41,9 @@ class EDA_vec():
     
         return self.vocab, self.vec_fit
 
-    # diff in word frequenncy ## TO DO: VEC_DATA NO LONGER EXISTS. REPLACE BELOW!!!!
+    # diff in word frequenncy
     def word_freq(self):
-        df = pd.DataFrame(data=self.vec_data.toarray(), columns=self.vocab)
+        df = pd.DataFrame(data=self.vec_fit.toarray(), columns=self.vocab)
         df['legit'] = self.y
         legit = df[df['legit'] == 0]
         troll = df[df['legit'] == 1]
