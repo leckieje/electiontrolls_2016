@@ -44,7 +44,7 @@ class EDA_vec():
     # diff in word frequenncy
     def word_freq(self):
         df = pd.DataFrame(data=self.vec_fit.transform(self.X), columns=self.vocab)
-        df['legit'] = self.y
+        df['legit'] = np.array(self.y)
         legit = df[df['legit'] == 0]
         troll = df[df['legit'] == 1]
         legit_fr = legit.sum().apply(lambda x: x/len(legit))
