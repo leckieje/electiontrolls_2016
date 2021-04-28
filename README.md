@@ -1,11 +1,10 @@
-# Double Bind
-### Fighting Trolls and Defending Free Speech in the 2016 Election
+# Double Bind: Fighting Trolls and Defending Free Speech in the 2016 Election
 
 ![Double Bind Header]()
 
-An incredible aspect of the 2016 presidential election was its capacity to surprise. Nearly 5 years later, and I still find myself in awe of the double bind social media companies found themselves in as result of how the election played out. One narrative that emerged was of Putin the Puppet master hiding deep within our news feeds. Social media companies had become weapons in a new Cold War. On the other hand, in part by trying to address issues of election interference, these same social media companies were accused of choking out free speech at home. And misclassifications of legitimate speech as foreign trolls lead to accusations of bias and disenfranchisement. 
+An incredible aspect of the 2016 presidential election was its capacity to surprise. Nearly 5 years later, and I still find myself in awe of the double bind social media companies found themselves in as result of how that election played out. One narrative that emerged shorlty after the polls closed was of Putin the Puppetmaster hiding deep within our news feeds. Social media companies had become weapons in a new Cold War. On the other hand, in part by trying to address issues of election interference, these same social media companies were accused of choking out free speech at home as misclassifications of legitimate speech as foreign trolling lead to accusations of bias and disenfranchisement. 
 
-The project seeks to address the double bind grown out of the 2016 election using natural language processing (NLP) and machine learning, to classify trolls while avoiding the misclassifications of legitimate speech. The results will highlight the contradictory nature of this difficult problem and make some suggestions for further research. 
+This project seeks to address the double bind grown out of the 2016 election using natural language processing (NLP) and machine learning, to classify trolls while avoiding the misclassifications of legitimate speech. The results will highlight the contradictory nature of this difficult problem and make some suggestions for further research. 
 
 ---
 
@@ -25,7 +24,7 @@ After this process, I was left with a little more than 5.3 million Tweets. Rough
 
 The goal of the modeling phase was to predict the troll/legitimate labels based solely on the text of the Tweet. To get an idea of how the model might perform, I began by exploring word use frequencies among the classes. What I found was that legitimate Tweeters tended to use more generic terms which would be expected to accompany a political contest. Trolls, on the other hand, preferred words associated with divisive social issues. Legitimate Tweets were more likely to contain words such as `election`, `debate`, and `president`, while trolls favored words like `police`, `sports`, and `black`. If you remember the summer of 2016, the Black Lives Matter movement was in full force and that movement had made its way into sports in a public way often personified by the San Francisco 49ers' then-quarterback Colin Kapernick when he began kneeling during the national anthem at NFL games in August of 2016. 
 
-Given this evidence, I beleived there was a reasonable chance that I could begin to classify the Tweets by topic. I count vectorized my corpus, ran a Latent Derichlet Allocation model, and then re-introduced the labels to view the disribution of topics by class. But the model showed no discernable difference in the distribuition of topics. The charts here show five topics, but the results were similarr no matter the number of topics used. Upon reflection, this findinng should hve been such a shock. From what congrresionnal investigations revealed about the troll operation, the goal was not to introduce new topics but to exploit the topics that already existed. This means that even if trolls favored words like `police`, `sports`, and `black`, racial injustice was not a topic unique to them, and distinguishing the classes based on topics was unlikely to succeed. 
+Given this evidence, I beleived there was a reasonable chance that I could begin to classify the Tweets by topic. I count vectorized my corpus, ran a Latent Derichlet Allocation model, and then re-introduced the labels to view the disribution of topics by class. But the model showed no discernable difference in the distribuition of topics. The charts here show five topics, but the results were similarr no matter the number of topics used. Upon reflection, this findinng should hve been such a shock. From what congrresionnal investigations revealed about the troll operation, the goal was not to introduce new topics but to exploit the topics that already existed. This means that even if trolls favored words like `police`, `sports`, and `black`, racial injustice was not a topic unique to them--even if they were more likely to poke at the topic--and distinguishing the classes based on topics was unlikely to succeed. 
 
 ---
 
@@ -38,3 +37,18 @@ To reach this balance, eventually a thresshold of 57.95 percent was was set. Pre
 To illustrate this point, I raised the threshold to 75 percent. This greatly improved the precision score to 94.7 percent. It also reduced the percent of legitimate tweets missclassied to 0.1 percent. But misclassification of troll tweets jumped to 67.9 percent with a recall score of 32.1 percent. There is an argument to be made here that this model is no better than no model at all and the orginal problem of identifying troll tweets is hardly being addressed. 
 
 On the flip side, a threshold of 25 percent does an excellent job of identifying trolls. The model's recall score and percentage of trolls correctly classified jumps to 97.2 percent. The rub is that eveyone is now a suspect, and slightly more than half of legitmate tweets are misclassified, dragging down the precision score to a lowsy 12.5 percent. 
+
+---
+
+### The Evaluation
+
+Looking at the gini importance from the balances model, many of the same words that appeared in the word frequncy chart appear. `Election`, `debate`, and `police` top the list, but `president` and `sports` also make appearances among the top ten important words. `World` is another word that appears as fifth on the gini importance and also appeared in other iterations of the word frequncy charts as a term favored by the trolls. My hypthosis is that similar to racial inequality, the trolls began to push the issue of globalization as it too became a legitimate, if divisive, issue in the election. 
+
+beat the model ...
+---
+
+### The Future
+
+---
+
+### The Tech
