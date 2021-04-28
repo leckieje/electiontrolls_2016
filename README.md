@@ -6,7 +6,7 @@
 </p>
 
 
-A lingering aspect of the 2016 presidential election was its capacity to surprise. Nearly 5 years later, and I still find myself in awe of the double bind social media companies found themselves in as result of how that election played out. One narrative that emerged shortly after the polls closed was of Putin the Puppet Master hiding deep within our news feeds. Social media companies had become weapons in a new Cold War. On the other hand, in part by trying to address issues of election interference, these same social media companies were accused of choking out free speech at home, and misclassifications of legitimate speech as foreign trolling lead to accusations of bias and disenfranchisement. 
+A lingering aspect of the 2016 presidential election is its capacity to surprise. Nearly 5 years later, and I still find myself in awe of the double bind social media companies found themselves in as result of how that election played out. One narrative that emerged after the polls closed was of Putin the Puppet Master hiding deep within our news feeds. Social media companies had become weapons in a new Cold War. On the other hand, in part by trying to address issues of election interference, these same social media companies were accused of choking out free speech at home, and misclassifications of legitimate speech as foreign trolling lead to accusations of bias and disenfranchisement. 
 
 This project seeks to address the double bind grown out of the 2016 election using natural language processing (NLP) and machine learning to classify trolls while avoiding the misclassifications of legitimate speech. The results will highlight the contradictory nature of this difficult problem and make some suggestions for further research.  
 
