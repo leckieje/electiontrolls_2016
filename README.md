@@ -44,10 +44,18 @@ On the flip side, a threshold of 25 percent does an excellent job of identifying
 
 Looking at the gini importance from the balances model, many of the same words that appeared in the word frequncy chart appear. `Election`, `debate`, and `police` top the list, but `president` and `sports` also make appearances among the top ten important words. `World` is another word that appears as fifth on the gini importance and also appeared in other iterations of the word frequncy charts as a term favored by the trolls. My hypthosis is that similar to racial inequality, the trolls began to push the issue of globalization as it too became a legitimate, if divisive, issue in the election. 
 
-beat the model ...
----
+Yet while these words and the differnces in the frrequency of thier use proved important to classifying the tweets, the presense of the word did not guaruntee a correct classification. Below are two Tweets about the police that the model misclassifed. Both Tweets could be classified as right-wing, pro-police, and at best diminish, if not glorify, violence. It's easy to see why the model would have trouble, although interesting to note the tweets come from different classes and for each class the model classified incorrectly. See if you can correcty identify them. 
 
+![beat the model tweets]()
+
+(If you guessed troll on the left andd legitmate on the right, you're correct!)
+
+---
 ### The Future
+
+It's clear that further investigation into the misclassifications of both trolls and legitimate Tweets is waranted. Discoveries there may go a long way to improving the model and would be my iimmediate next step. A quick pass of only the misclassifications through the model with a 50 percent threshold showed decent results, but I suspect a closer look could improve the results further and provide more insights into the dataset.
+
+Additionaly, given the difficulty of balancing the types misclassifications, the severity of the penatly for misclassification, and the difficulty of correctly identifying Tweets like the two above, other models should be considered. Perhaps newer NLP techniques such Bidirectional Encoder Representations from Transformers (BERT) could be leveraged to better understand a Tweet's context. 
 
 ---
 
