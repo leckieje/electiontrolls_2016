@@ -51,7 +51,7 @@ Given this evidence, I beleived there was a reasonable chance that I could begin
 
 With topic modeling proving less than promising, I pivoted to a random forest classifier. I re-vectorized th corpus, switching from count vectors to TF-IDF vectors. This reintroduced the high dimensionality that I sought to avoid with topic modeling, and since the data contained only 7 percent trolls the training set required rebalancing with SMOTE. Still, even with these challanges, the ROC curve produced by the model showed a way forward. But it also highlighted some of the trade offs that would need to be made. According to the ROC curve, the rate of false positives (i.e. missclassifying legitimate speech as troll speech) grew slowly moving across the curve from left to right. But as the true postive rate (i.e. correctly identifying trolls) reached 50 percent, the rate of false possitives began to grow more rapidly before takeinng a sharp right turn as the true positive rate passed 60 percent. Clearly these inversely related objectives (to increase the rate of correctly identifying trollss while limited the number legitmate speech misclassifications) was going to require compromise and balance to achive the the best model posssible. 
 
-<img align="right" width="300" src="https://github.com/leckieje/electiontrolls_2016/blob/main/img/balanced_mod_CM.png">
+<img align="right" width="400" src="https://github.com/leckieje/electiontrolls_2016/blob/main/img/balanced_mod_CM.png">
 
 To reach this balance, eventually a thresshold of 57.95 percent was was set. Precision measurrerd at 32.3 percent and recall at 74.3. This resulted in only 11.8 percent of all legitmate Tweets being misclassified (false positives). It also missclassifed 25.7 percent of trolls. While this may not seem ideal (which no compromise is) when looking at the raw numbers from the test set, you can see the importance of keeping the the percentage of false positives as low as possible. For this balanced model, 11.8 percent of legitmate Tweets in the test set equated to 147,488 Tweets compared to the only 24,416 misclassified troll tweets. The bind here is that the more the model pushes thhe percentage of false positives down, the higher the percentage of trolls that go undetected. 
 
@@ -60,7 +60,7 @@ To illustrate this point, I raised the threshold to 75 percent. This greatly imp
 On the flip side, a threshold of 25 percent does an excellent job of identifying trolls. The model's recall score and percentage of trolls correctly classified jumps to 97.2 percent. The rub is that eveyone is now a suspect, and slightly more than half of legitmate tweets are misclassified, dragging down the precision score to a lowsy 12.5 percent. 
 
 <p align="center">
-  <img width="700" src="https://github.com/leckieje/electiontrolls_2016/blob/main/img/CM_25_75.png">
+  <img width="600" src="https://github.com/leckieje/electiontrolls_2016/blob/main/img/CM_25_75.png">
 </p>
 
 
