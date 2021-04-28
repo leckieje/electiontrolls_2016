@@ -11,7 +11,7 @@ An incredible aspect of the 2016 presidential election was its capacity to surpr
 This project seeks to address the double bind grown out of the 2016 election using natural language processing (NLP) and machine learning, to classify trolls while avoiding the misclassifications of legitimate speech. The results will highlight the contradictory nature of this difficult problem and make some suggestions for further research. 
 
 <p align="center">
-  <img width="500" src="https://github.com/leckieje/electiontrolls_2016/blob/main/img/poltical_cartoons.png">
+  <img width="600" src="https://github.com/leckieje/electiontrolls_2016/blob/main/img/poltical_cartoons.png">
 </p>
 
 
@@ -33,31 +33,36 @@ After this process, I was left with a little more than 5.3 million Tweets. Rough
 
 ### The Exploration
 
-<img align="right" width="500" src="https://github.com/leckieje/electiontrolls_2016/blob/main/img/word_use_freq.png">
+<img align="right" width="400" src="https://github.com/leckieje/electiontrolls_2016/blob/main/img/word_use_freq.png">
 
 The goal of the modeling phase was to predict the troll/legitimate labels based solely on the text of the Tweet. To get an idea of how the model might perform, I began by exploring word use frequencies among the classes. What I found was that legitimate Tweeters tended to use more generic terms which would be expected to accompany a political contest. Trolls, on the other hand, preferred words associated with divisive social issues. Legitimate Tweets were more likely to contain words such as `election`, `debate`, and `president`, while trolls favored words like `police`, `sports`, and `black`. If you remember the summer of 2016, the Black Lives Matter movement was in full force and that movement had made its way into sports in a public way often personified by the San Francisco 49ers' then-quarterback Colin Kapernick when he began kneeling during the national anthem at NFL games in August of 2016. 
 
 Given this evidence, I beleived there was a reasonable chance that I could begin to classify the Tweets by topic. I count vectorized my corpus, ran a Latent Derichlet Allocation model, and then re-introduced the labels to view the disribution of topics by class. But the model showed no discernable difference in the distribuition of topics. The charts here show five topics, but the results were similarr no matter the number of topics used. Upon reflection, this findinng should hve been such a shock. From what congrresionnal investigations revealed about the troll operation, the goal was not to introduce new topics but to exploit the topics that already existed. This means that even if trolls favored words like `police`, `sports`, and `black`, racial injustice was not a topic unique to them--even if they were more likely to poke at the topic--and distinguishing the classes based on topics was unlikely to succeed. 
 
 <p align="center">
-  <img width="800" src="https://github.com/leckieje/electiontrolls_2016/blob/main/img/topic_model.png">
+  <img width="700" src="https://github.com/leckieje/electiontrolls_2016/blob/main/img/topic_model.png">
 </p>
 
 ---
 
 ### The Model 
 
-<img align="right" width="500" src="https://github.com/leckieje/electiontrolls_2016/blob/main/img/roc_curve.png">
+<img align="right" width="400" src="https://github.com/leckieje/electiontrolls_2016/blob/main/img/roc_curve.png">
 
 With topic modeling proving less than promising, I pivoted to a random forest classifier. I re-vectorized th corpus, switching from count vectors to TF-IDF vectors. This reintroduced the high dimensionality that I sought to avoid with topic modeling, and since the data contained only 7 percent trolls the training set required rebalancing with SMOTE. Still, even with these challanges, the ROC curve produced by the model showed a way forward. But it also highlighted some of the trade offs that would need to be made. According to the ROC curve, the rate of false positives (i.e. missclassifying legitimate speech as troll speech) grew slowly moving across the curve from left to right. But as the true postive rate (i.e. correctly identifying trolls) reached 50 percent, the rate of false possitives began to grow more rapidly before takeinng a sharp right turn as the true positive rate passed 60 percent. Clearly these inversely related objectives (to increase the rate of correctly identifying trollss while limited the number legitmate speech misclassifications) was going to require compromise and balance to achive the the best model posssible. 
 
-<img align="right" width="400" src="https://github.com/leckieje/electiontrolls_2016/blob/main/img/balanced_mod_CM.png">
+<img align="right" width="300" src="https://github.com/leckieje/electiontrolls_2016/blob/main/img/balanced_mod_CM.png">
 
 To reach this balance, eventually a thresshold of 57.95 percent was was set. Precision measurrerd at 32.3 percent and recall at 74.3. This resulted in only 11.8 percent of all legitmate Tweets being misclassified (false positives). It also missclassifed 25.7 percent of trolls. While this may not seem ideal (which no compromise is) when looking at the raw numbers from the test set, you can see the importance of keeping the the percentage of false positives as low as possible. For this balanced model, 11.8 percent of legitmate Tweets in the test set equated to 147,488 Tweets compared to the only 24,416 misclassified troll tweets. The bind here is that the more the model pushes thhe percentage of false positives down, the higher the percentage of trolls that go undetected. 
 
 To illustrate this point, I raised the threshold to 75 percent. This greatly improved the precision score to 94.7 percent. It also reduced the percent of legitimate tweets missclassied to 0.1 percent. But misclassification of troll tweets jumped to 67.9 percent with a recall score of 32.1 percent. There is an argument to be made here that this model is no better than no model at all and the orginal problem of identifying troll tweets is hardly being addressed. 
 
 On the flip side, a threshold of 25 percent does an excellent job of identifying trolls. The model's recall score and percentage of trolls correctly classified jumps to 97.2 percent. The rub is that eveyone is now a suspect, and slightly more than half of legitmate tweets are misclassified, dragging down the precision score to a lowsy 12.5 percent. 
+
+<p align="center">
+  <img width="700" src="https://github.com/leckieje/electiontrolls_2016/blob/main/img/CM_25_75.png">
+</p>
+
 
 ---
 
