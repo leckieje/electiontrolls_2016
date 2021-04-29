@@ -60,7 +60,7 @@ To illustrate this point, I raised the threshold to 75 percent. This greatly imp
 On the flip side, a threshold of 25 percent does an excellent job of identifying trolls. The model's recall score and percentage of trolls correctly classified jumps to 97.2 percent. The rub is that everyone is now a suspect, and slightly more than half of legitimate Tweets are misclassified. This dragged down the precision score to a lousy 12.5 percent. 
 
 <p align="center">
-  <img width="600" src="https://github.com/leckieje/electiontrolls_2016/blob/main/img/CM_25_75.png">
+  <img width="600" src="https://github.com/leckieje/electiontrolls_2016/blob/main/img/CM_7525.png">
 </p>
 
 
